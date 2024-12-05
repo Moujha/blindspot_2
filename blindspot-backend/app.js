@@ -6,9 +6,12 @@ const querystring = require('querystring');
 const app = express();
 
 // Spotify credentials
-const clientId = 'c2fd787be177437799de06b6062ddc9a'; // Replace with your Client ID
-const clientSecret = '6afc5e81d53c40fea8106f222572610e'; // Replace with your Client Secret
-const redirectUri = 'http://localhost:3000/callback'; // Replace with your Redirect URI
+// Access environment variables
+require('dotenv').config(); // Load .env variables
+
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const redirectUri = process.env.REDIRECT_URI;
 
 // Middleware for serving static files from the 'src' folder
 app.use(express.static(path.join(__dirname, '../src')));
