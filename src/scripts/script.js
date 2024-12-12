@@ -1,16 +1,20 @@
-const clientId = 'c2fd787be177437799de06b6062ddc9a';
-const redirectUri = 'http://localhost:3000/callback'; //Redirect URI
+// Spotify Client ID (Safe to expose)
+const clientId = 'c2fd787be177437799de06b6062ddc9a'; 
+const redirectUri = 'http://localhost:3000/spotify/callback'; // Backend route for handling Spotify callback
+
+
+
 const scopes = [
     'user-read-private',
     'user-read-email', // Add more scopes based on your API needs
 ];
 
 function spotifyLogin() {
-    const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(' '))}`;
+    const authUrl = `http://localhost:3000/spotify/auth`; // Redirects through your backend
     window.location.href = authUrl; // Redirect user to Spotify's authorization page
 }
 
-function spotifyLoginClick() {
+function attachLoginEvent() {
     document.getElementById('spotify-login').addEventListener('click', spotifyLogin);
 }
 
@@ -31,7 +35,7 @@ function handleAuthorizationCode() {
 }
 
 function exchangeAuthorizationCodeForToken(code) {
-    fetch('/api/token', { // Replace with your backend endpoint
+    fetch('/spotify/callback', { // Hits your backend's callback endpoint
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -53,8 +57,30 @@ function exchangeAuthorizationCodeForToken(code) {
     });
 }
 
-// Attach the login event listener
-spotifyLoginClick();
+function handleTokensFromQuery() {
+    console.log('Handling tokens from query...');
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('access_token');
+    const refreshToken = urlParams.get('refresh_token');
+    const expiresIn = urlParams.get('expires_in');
+
+    if (accessToken) {
+        // Store tokens in localStorage for later use
+        localStorage.setItem('spotifyAccessToken', accessToken);
+        localStorage.setItem('spotifyRefreshToken', refreshToken);
+        localStorage.setItem('spotifyTokenExpiry', Date.now() + expiresIn * 1000);
+
+        console.log('Access Token:', accessToken);
+    }
+
+    // Clean up the URL
+    window.history.replaceState({}, document.title, '/dashboard');
+}
+
+
+
+// Attach the login event listener
+attachLoginEvent();
 // Handle the authorization code on page load
 handleAuthorizationCode();
