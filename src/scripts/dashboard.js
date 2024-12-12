@@ -58,7 +58,7 @@ async function fetchRecentlyPlayed() {
         return;
       }
   
-      const response = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=10', {
+      const response = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -84,8 +84,10 @@ function groupTracksByArtist(tracks) {
         groupedTracks[artistId] = [];
       }
   
-      // Add the track to the artist's array
-      groupedTracks[artistId].push(trackName);
+    // Add the track to the artist's array if it's not already there
+    if (!groupedTracks[artistId].includes(trackName)) {
+        groupedTracks[artistId].push(trackName);
+      }
     });
   
     return groupedTracks;
