@@ -84,13 +84,19 @@ function groupTracksByArtist(tracks) {
         groupedTracks[artistId] = [];
       }
   
-    // Add the track to the artist's array if it's not already there
-    if (!groupedTracks[artistId].includes(trackName)) {
-        groupedTracks[artistId].push(trackName);
+    // If the track is already in the artist's object, increment its count
+    if (groupedTracks[artistId][trackName]) {
+        groupedTracks[artistId][trackName].count += 1;
+      } else {
+        // Otherwise, add the track with an initial count of 1
+        groupedTracks[artistId][trackName] = {
+          name: trackName,
+          count: 1,
+        };
       }
     });
-  
     return groupedTracks;
+
   }
   
 async function fetchArtistDetails(artistIds) {
@@ -141,13 +147,18 @@ async function displayArtists(groupedTracks, artistDetails) {
         const card = document.createElement('div');
         card.classList.add('artist-card');
     
+        // Build the list of tracks with stream counts
+        const trackListContent = Object.entries(tracks)
+            .map(([trackName, trackData]) => `<li>${trackData.name} (x${trackData.count})</li>`)
+            .join('');
+
         // Build the card content
         card.innerHTML = `
           <img src="${image}" alt="${name}" />
           <div class="artist-info">
             <h2>${name}</h2>
             <ul>
-              ${tracks.map(track => `<li>${track}</li>`).join('')}
+                ${trackListContent}
             </ul>
           </div>
         `;
@@ -179,32 +190,35 @@ function handleTokensFromQuery() {
     window.history.replaceState({}, document.title, '/dashboard');
     }
 
-    async function main() {
-        try {
-          // Step 1: Handle tokens from the query string
-          handleTokensFromQuery();
-      
-          // Step 2: Fetch recently played tracks
-          const recentlyPlayedTracks = await fetchRecentlyPlayed();
-          if (!recentlyPlayedTracks) {
+async function main() {
+    try {
+        // Step 1: Handle tokens from the query string
+        handleTokensFromQuery();
+    
+        // Step 2: Fetch recently played tracks
+        const recentlyPlayedTracks = await fetchRecentlyPlayed();
+        if (!recentlyPlayedTracks || recentlyPlayedTracks.length === 0) {
             console.error('No recently played tracks available.');
+            document.getElementById('artists-container').innerHTML = '<p>No recently played tracks found.</p>';
             return;
-          }
-      
-          // Step 3: Group tracks by artist
-          const groupedTracks = groupTracksByArtist(recentlyPlayedTracks);
-          console.log('Grouped Tracks:', groupedTracks);
-      
-          // Step 4: Fetch artist details
-          const artistIds = Object.keys(groupedTracks);
-          const artistDetails = await fetchArtistDetails(artistIds);
-      
-          // Step 5: Display artists and their tracks
-          displayArtists(groupedTracks, artistDetails);
-        } catch (error) {
-          console.error('An error occurred in the main function:', error.message);
-        }
-      }
+            }
+
+        console.log('Recently Played Tracks:', recentlyPlayedTracks);
+
+        // Step 3: Group tracks by artist
+        const groupedTracks = groupTracksByArtist(recentlyPlayedTracks);
+        console.log('Grouped Tracks:', groupedTracks);
+    
+        // Step 4: Fetch artist details
+        const artistIds = Object.keys(groupedTracks);
+        const artistDetails = await fetchArtistDetails(artistIds);
+    
+        // Step 5: Display artists and their tracks
+        displayArtists(groupedTracks, artistDetails);
+    } catch (error) {
+        console.error('An error occurred in the main function:', error.message);
+    }
+    }
       
 
 main();
