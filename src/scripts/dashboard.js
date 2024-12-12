@@ -65,69 +65,96 @@ async function fetchRecentlyPlayed() {
       if (!response.ok) throw new Error('Failed to fetch recently played tracks');
   
       const data = await response.json();
-      console.log(data)
-      await displayArtists(data.items);
+      return data.items
     } catch (error) {
       console.error('Error while fetching recently played tracks:', error.message);
       alert('Unable to fetch recently played tracks. Please try again later.');
     }
-    }
+}
+
+function groupTracksByArtist(tracks) {
+    const groupedTracks = {};
   
-async function fetchArtistImage(artist_id) {
-    try {
-      const token = localStorage.getItem('spotifyAccessToken');
-      if (!token) {
-        alert('Access token is missing. Redirecting to login...');
-        window.location.href = '/';
-        return 'default-artist-image.jpg';
+    tracks.forEach((item) => {
+      const artistId = item.track.artists[0].id; // Get the artist ID
+      const trackName = item.track.name; // Get the track name
+  
+      // If the artist ID is not in the grouped object, initialize it
+      if (!groupedTracks[artistId]) {
+        groupedTracks[artistId] = [];
       }
   
-      const response = await fetch(`https://api.spotify.com/v1/artists/${artist_id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // Add the track to the artist's array
+      groupedTracks[artistId].push(trackName);
+    });
   
-      if (!response.ok) throw new Error('Failed to fetch artist details');
-  
-      const data = await response.json();
-      return data.images?.[0]?.url || 'default-artist-image.jpg'; // Return the first available artist image or default
-    } catch (error) {
-      console.error('Error while fetching artist profile picture:', error.message);
-      return 'default-artist-image.jpg'; // Return default image on error
-    }
+    return groupedTracks;
   }
   
+async function fetchArtistDetails(artistIds) {
+    const artistDetails = {};
 
-async function displayArtists(tracks) {
+    for (const artistId of artistIds) {
+        try {
+        const token = localStorage.getItem('spotifyAccessToken');
+        if (!token) {
+            alert('Access token is missing. Redirecting to login...');
+            window.location.href = '/';
+            return;
+        }
+
+        const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch artist details');
+
+        const data = await response.json();
+
+        // Store the artist details in the object
+        artistDetails[artistId] = {
+            name: data.name,
+            image: data.images?.[0]?.url || 'default-artist-image.jpg',
+        };
+        } catch (error) {
+        console.error(`Error fetching details for artist ${artistId}:`, error.message);
+        artistDetails[artistId] = {
+            name: 'Unknown Artist',
+            image: 'default-artist-image.jpg',
+        };
+        }
+    }
+    return artistDetails;
+    }
+  
+  
+async function displayArtists(groupedTracks, artistDetails) {
     const container = document.getElementById('artists-container');
     container.innerHTML = ''; // Clear previous content
   
-    if (tracks.length === 0) {
-      container.innerHTML = '<p>No recently played tracks found.</p>';
-      return;
-    }
-  
-    for (const item of tracks) {
-        const artist = item.track.artists[0]; // Get the first artist
-        const trackName = item.track.name;
+    for (const [artistId, tracks] of Object.entries(groupedTracks)) {
+        const { name, image } = artistDetails[artistId];
     
-        // Fetch artist image asynchronously
-        const artistImage = await fetchArtistImage(artist.id);
-    
-        // Create a card for the artist
+        // Create the artist card element
         const card = document.createElement('div');
         card.classList.add('artist-card');
     
+        // Build the card content
         card.innerHTML = `
-          <img src="${artistImage}" alt="${artist.name}" />
+          <img src="${image}" alt="${name}" />
           <div class="artist-info">
-            <h2>${artist.name}</h2>
-            <p>${trackName}</p>
+            <h2>${name}</h2>
+            <ul>
+              ${tracks.map(track => `<li>${track}</li>`).join('')}
+            </ul>
           </div>
         `;
     
+        // Append the card to the container
         container.appendChild(card);
       }
     }
+    
 
 function handleTokensFromQuery() {
     console.log('Handling tokens from query...');
@@ -150,6 +177,32 @@ function handleTokensFromQuery() {
     window.history.replaceState({}, document.title, '/dashboard');
     }
 
-  handleTokensFromQuery();
-  fetchRecentlyPlayed();
-  
+    async function main() {
+        try {
+          // Step 1: Handle tokens from the query string
+          handleTokensFromQuery();
+      
+          // Step 2: Fetch recently played tracks
+          const recentlyPlayedTracks = await fetchRecentlyPlayed();
+          if (!recentlyPlayedTracks) {
+            console.error('No recently played tracks available.');
+            return;
+          }
+      
+          // Step 3: Group tracks by artist
+          const groupedTracks = groupTracksByArtist(recentlyPlayedTracks);
+          console.log('Grouped Tracks:', groupedTracks);
+      
+          // Step 4: Fetch artist details
+          const artistIds = Object.keys(groupedTracks);
+          const artistDetails = await fetchArtistDetails(artistIds);
+      
+          // Step 5: Display artists and their tracks
+          displayArtists(groupedTracks, artistDetails);
+        } catch (error) {
+          console.error('An error occurred in the main function:', error.message);
+        }
+      }
+      
+
+main();
