@@ -57,26 +57,7 @@ function exchangeAuthorizationCodeForToken(code) {
     });
 }
 
-function handleTokensFromQuery() {
-    console.log('Handling tokens from query...');
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('access_token');
-    const refreshToken = urlParams.get('refresh_token');
-    const expiresIn = urlParams.get('expires_in');
-
-    if (accessToken) {
-        // Store tokens in localStorage for later use
-        localStorage.setItem('spotifyAccessToken', accessToken);
-        localStorage.setItem('spotifyRefreshToken', refreshToken);
-        localStorage.setItem('spotifyTokenExpiry', Date.now() + expiresIn * 1000);
-
-        console.log('Access Token:', accessToken);
-    }
-
-    // Clean up the URL
-    window.history.replaceState({}, document.title, '/dashboard');
-}
 
 
 
