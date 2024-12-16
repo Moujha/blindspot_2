@@ -182,28 +182,27 @@ main {
   }
   
   /* Artists Container */
-.artists-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  width: 90%;
-  max-width: 1200px;
-  margin: 20px 0;
+#artists-container {
+  display: flex;           /* Enable Flexbox */
+  flex-wrap: wrap;         /* Allow wrapping to the next line */
+  justify-content: center; /* Center cards horizontally */
+  gap: 16px;               /* Add spacing between cards */
 }
 
 /* Artist Card */
 .artist-card {
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin: 16px;
   padding: 16px;
-  width: 300px;
+  width: 300px;            /* Maintain card width */
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #222;  /* Ensure background is visible */
 }
 
 .artist-card:hover {
   transform: translateY(-10px);
+  transition: transform 0.2s ease-in-out;
 }
 
 .artist-card img {
