@@ -136,64 +136,74 @@ async function fetchArtistDetails(artistIds) {
     }
   
   
-async function displayArtists(groupedTracks, artistDetails) {
+  async function displayArtists(groupedTracks, artistDetails) {
     const container = document.getElementById('artists-container');
     container.innerHTML = ''; // Clear previous content
   
-    for (const [artistId, tracks] of Object.entries(groupedTracks)) {
-        const { name, image } = artistDetails[artistId];
-        const totalTrackCount = Object.values(tracks).reduce((sum, track) => sum + track.count, 0); // Total tracks count
-
-    
-        // Create the artist card element
-        const card = document.createElement('div');
-        card.classList.add('artist-card');
-    
-        // Create the track list element (hidden initially)
-    const trackList = document.createElement('ul');
-    trackList.classList.add('track-list');
-    trackList.style.display = 'none'; // Hide initially
-
-    // Populate the track list
-    Object.entries(tracks).forEach(([trackName, trackData]) => {
-      const trackItem = document.createElement('li');
-      trackItem.textContent = `${trackData.name} (x${trackData.count})`;
-      trackList.appendChild(trackItem);
+    // Step 1: Convert groupedTracks into an array of [artistId, tracks]
+    const sortedArtists = Object.entries(groupedTracks).map(([artistId, tracks]) => {
+      // Calculate total track count for each artist
+      const totalTrackCount = Object.values(tracks).reduce((sum, track) => sum + track.count, 0);
+  
+      return { artistId, tracks, totalTrackCount };
     });
-
-    // Create the toggle button
-    const toggleButton = document.createElement('button');
-    toggleButton.textContent = '+';
-    toggleButton.classList.add('toggle-button');
-
-    // Add click event to toggle the track list
-    toggleButton.addEventListener('click', () => {
-      if (trackList.style.display === 'none') {
-        trackList.style.display = 'block'; // Show tracks
-        toggleButton.textContent = '-';
-      } else {
-        trackList.style.display = 'none'; // Hide tracks
-        toggleButton.textContent = '+';
-      }
+  
+    // Step 2: Sort the array based on totalTrackCount in descending order
+    sortedArtists.sort((a, b) => b.totalTrackCount - a.totalTrackCount);
+  
+    // Step 3: Render the sorted artist cards
+    sortedArtists.forEach(({ artistId, tracks, totalTrackCount }) => {
+      const { name, image } = artistDetails[artistId];
+  
+      // Create the artist card element
+      const card = document.createElement('div');
+      card.classList.add('artist-card');
+  
+      // Create the track list element (hidden initially)
+      const trackList = document.createElement('ul');
+      trackList.classList.add('track-list');
+      trackList.style.display = 'none'; // Hide initially
+  
+      // Populate the track list
+      Object.entries(tracks).forEach(([trackName, trackData]) => {
+        const trackItem = document.createElement('li');
+        trackItem.textContent = `${trackData.name} (x${trackData.count})`;
+        trackList.appendChild(trackItem);
+      });
+  
+      // Create the toggle button
+      const toggleButton = document.createElement('button');
+      toggleButton.textContent = '+';
+      toggleButton.classList.add('toggle-button');
+  
+      // Add click event to toggle the track list
+      toggleButton.addEventListener('click', () => {
+        if (trackList.style.display === 'none') {
+          trackList.style.display = 'block'; // Show tracks
+          toggleButton.textContent = '-';
+        } else {
+          trackList.style.display = 'none'; // Hide tracks
+          toggleButton.textContent = '+';
+        }
+      });
+  
+      // Build the card content
+      card.innerHTML = `
+        <img src="${image}" alt="${name}" />
+        <div class="artist-info">
+          <h2>${name}</h2>
+          <p>Total Tracks Played: ${totalTrackCount}</p>
+        </div>
+      `;
+  
+      // Append elements to the card
+      card.appendChild(toggleButton);
+      card.appendChild(trackList);
+  
+      // Append the card to the container
+      container.appendChild(card);
     });
-
-    // Build the card content
-    card.innerHTML = `
-      <img src="${image}" alt="${name}" />
-      <div class="artist-info">
-        <h2>${name}</h2>
-        <p>Total Tracks Played: ${totalTrackCount}</p>
-      </div>
-    `;
-
-    // Append elements to the card
-    card.appendChild(toggleButton);
-    card.appendChild(trackList);
-
-    // Append the card to the container
-    container.appendChild(card);
   }
-}
     
 
 function handleTokensFromQuery() {
