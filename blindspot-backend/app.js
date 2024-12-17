@@ -1,10 +1,14 @@
 const express = require('express');
 const path = require('path');
-require('dotenv').config(); // Load .env variables
-
+const connectDB = require('./db'); // Import MongoDB connection function
 const spotifyRoutes = require('./routes/spotifyRoutes'); // Import Spotify routes
 
+require('dotenv').config(); // Load .env variables
+
 const app = express();
+
+// Connect to MongoDB
+connectDB(); // Call the function to establish the connection
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');

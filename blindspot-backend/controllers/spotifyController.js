@@ -1,5 +1,7 @@
 const axios = require('axios');
 const querystring = require('querystring');
+const { storeOrUpdateUser } = require('../services/userService'); // Import the modular DB function
+
 
 // Redirect the user to Spotify's authorization page
 exports.redirectToSpotify = (req, res) => {
@@ -23,11 +25,14 @@ exports.redirectToSpotify = (req, res) => {
 exports.handleSpotifyCallback = async (req, res) => {
     const code = req.query.code;
 
+    console.log('Sending authorization code to Spotify:', code);
+
     if (!code) {
         return res.status(400).json({ error: 'Authorization code not found' });
     }
 
     try {
+        // Exchange the code for an access token and refresh token
         const tokenResponse = await axios.post(
             'https://accounts.spotify.com/api/token',
             querystring.stringify({
@@ -46,14 +51,30 @@ exports.handleSpotifyCallback = async (req, res) => {
 
         const { access_token, refresh_token, expires_in } = tokenResponse.data;
 
+        // Retrieve Spotify User Profile
+        const userProfileResponse = await axios.get('https://api.spotify.com/v1/me', {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+
+        const spotifyUser = userProfileResponse.data;
+        
+        // Call the modular function to store/update user in the database
+        const user = await storeOrUpdateUser(spotifyUser, access_token, refresh_token);
+        console.log('User stored/updated in the database:', user);
+     
         console.log('Tokens generated:', { access_token, refresh_token, expires_in }); //log to debug
 
         // Store tokens in the session or redirect with a success message
         res.redirect(`/dashboard?access_token=${access_token}&refresh_token=${refresh_token}&expires_in=${expires_in}`);
         } catch (error) {
-        console.error('Error exchanging authorization code for token:', error.response.data);
-        res.status(500).json({ error: 'Failed to exchange authorization code for token' });
-    }
+            console.error(
+                'Error exchanging authorization code for token:',
+                error.response?.data || error.message
+            );
+            res.status(500).json({ error: 'Failed to exchange authorization code for token' });
+        }
 };
 
 // Refresh the access token
