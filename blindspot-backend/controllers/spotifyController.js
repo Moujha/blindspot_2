@@ -66,8 +66,8 @@ exports.handleSpotifyCallback = async (req, res) => {
      
         console.log('Tokens generated:', { access_token, refresh_token, expires_in }); //log to debug
 
-        // Store tokens in the session or redirect with a success message
-        res.redirect(`/dashboard?access_token=${access_token}&refresh_token=${refresh_token}&expires_in=${expires_in}`);
+        // Redirect to front-end with userId and tokens
+        res.redirect(`/dashboard?userId=${user._id}&access_token=${access_token}&refresh_token=${refresh_token}&expires_in=${expires_in}`);
         } catch (error) {
             console.error(
                 'Error exchanging authorization code for token:',

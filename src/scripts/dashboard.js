@@ -72,6 +72,48 @@ async function fetchRecentlyPlayed() {
     }
 }
 
+async function sendTracksToBackend(tracks) {
+  const userId = localStorage.getItem('spotifyUserId'); // Assume user ID is stored in localStorage
+
+    if (!userId) {
+        console.error('User ID is missing. Please log in again.');
+        alert('User ID is missing. Please log in again.');
+        return;
+    }
+
+    try {
+        // Prepare the payload
+        const payload = {
+            userId: userId,
+            tracks: tracks.map((track) => ({
+                isrc: track.isrc,
+                track_name: track.track_name,
+                artist_id: track.artist_id,
+                artist_name: track.artist_name,
+                played_at: track.played_at,
+            })),
+        };
+
+        // Send the tracks to the backend
+        const response = await fetch('/spotify/save-tracks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save tracks to the backend');
+        }
+
+        console.log('Tracks sent successfully to backend.');
+        alert('Tracks saved successfully!');
+    } catch (error) {
+        console.error('Error sending tracks to backend:', error.message);
+        alert('Failed to save tracks. Please try again.');
+    }
+}
+
+
 function groupTracksByArtist(tracks) {
     const groupedTracks = {};
   
@@ -213,6 +255,8 @@ function handleTokensFromQuery() {
     const accessToken = urlParams.get('access_token');
     const refreshToken = urlParams.get('refresh_token');
     const expiresIn = urlParams.get('expires_in');
+    const userId = urlParams.get('userId'); // Extract userId
+
 
     if (accessToken) {
         // Store tokens in localStorage for later use
@@ -221,6 +265,12 @@ function handleTokensFromQuery() {
         localStorage.setItem('spotifyTokenExpiry', Date.now() + expiresIn * 1000);
 
         console.log('Access Token:', accessToken);
+    }
+
+    if (userId) {
+      // Store user ID in localStorage
+      localStorage.setItem('spotifyUserId', userId);
+      console.log('User ID:', userId);
     }
 
     // Clean up the URL
@@ -247,7 +297,17 @@ async function main() {
 
         console.log('Recently Played Tracks:', recentlyPlayedTracks);
 
-        storeTracks(recentlyPlayedTracks)
+        // Step: Send tracks to the backend
+        const formattedTracks = recentlyPlayedTracks.map((item) => ({
+          isrc: item.track.external_ids.isrc,
+          track_name: item.track.name,
+          artist_id: item.track.artists[0].id,
+          artist_name: item.track.artists[0].name,
+          played_at: item.played_at,
+        }));
+
+        await sendTracksToBackend(formattedTracks);
+
 
         // Step 3: Group tracks by artist
         const groupedTracks = groupTracksByArtist(recentlyPlayedTracks);
