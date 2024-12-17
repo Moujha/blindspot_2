@@ -227,6 +227,11 @@ function handleTokensFromQuery() {
     window.history.replaceState({}, document.title, '/dashboard');
     }
 
+function storeTracks() {
+    
+}
+
+
 async function main() {
     try {
         // Step 1: Handle tokens from the query string
@@ -241,6 +246,8 @@ async function main() {
             }
 
         console.log('Recently Played Tracks:', recentlyPlayedTracks);
+
+        storeTracks(recentlyPlayedTracks)
 
         // Step 3: Group tracks by artist
         const groupedTracks = groupTracksByArtist(recentlyPlayedTracks);
