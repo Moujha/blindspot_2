@@ -48,7 +48,11 @@ exports.getUserTracks = async (req, res) => {
     
     // Query tracks for the given user ID
     const userTracks = await Track.find({ user_id: userId }).sort({ played_at: -1 });
-    return res.status(200).json(userTracks);
+
+    // Get the latest played_at timestamp
+    const lastPlayedAt = userTracks.length > 0 ? userTracks[0].played_at : null;
+
+    return res.status(200).json({ tracks: userTracks, lastPlayedAt });
     
 } catch (error) {
     console.error('Error fetching user tracks:', error.message);

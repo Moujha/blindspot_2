@@ -42,8 +42,8 @@ function showLoading() {
     container.innerHTML = '<p>Loading recently played tracks...</p>';
 }
   
-async function fetchRecentlyPlayed() {
-    showLoading();
+async function fetchRecentlyPlayed(lastPlayedAt = null) {
+  showLoading();
   
     try {
       if (isTokenExpired()) {
@@ -57,8 +57,15 @@ async function fetchRecentlyPlayed() {
         window.location.href = '/';
         return;
       }
+
+      // Construct the API URL
+      let url = 'https://api.spotify.com/v1/me/player/recently-played?limit=50';
+      if (lastPlayedAt) {
+          const afterTimestamp = new Date(lastPlayedAt).getTime();
+          url += `&after=${afterTimestamp}`;
+      }
   
-      const response = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
+      const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -127,7 +134,8 @@ async function fetchUserTracksFromDB() {
 
       if (!response.ok) throw new Error('Failed to fetch user tracks from database');
 
-      const tracks = await response.json();
+      const data = await response.json(); // Parse the full response
+      const tracks = data.tracks || []; // Return only the tracks array
       console.log('Tracks fetched from database:', tracks);
       return tracks;
   } catch (error) {
@@ -303,14 +311,23 @@ function handleTokensFromQuery() {
 
 
 
+
+
 async function main() {
     try {
-        // Step 1: Handle tokens from the query string
+        // Step: Handle tokens from the query string
         handleTokensFromQuery();
-    
-        // Step 2: Fetch recently played tracks
-        const recentlyPlayedTracks = await fetchRecentlyPlayed();
-        if (!recentlyPlayedTracks || recentlyPlayedTracks.length === 0) {
+
+        // Step 2: Fetch last played_at timestamp from the backend
+        const userTracksResponse = await fetch(`/spotify/get-tracks/${localStorage.getItem('spotifyUserId')}`);
+        const { tracks: existingTracks, lastPlayedAt } = await userTracksResponse.json();
+
+        console.log('Tracks from database:', existingTracks);
+        console.log('Last Played At:', lastPlayedAt);
+
+        // Step: Fetch recently played tracks
+        const recentlyPlayedTracks = await fetchRecentlyPlayed(lastPlayedAt);
+        if (!recentlyPlayedTracks && recentlyPlayedTracks.length === 0) {
             console.error('No recently played tracks available.');
             document.getElementById('artists-container').innerHTML = '<p>No recently played tracks found.</p>';
             return;
@@ -355,3 +372,9 @@ async function main() {
       
 
 main();
+
+document.getElementById('refresh-button').addEventListener('click', async () => {
+  console.log('Refreshing tracks...');
+  await main(); // Rerun the main function
+  alert('Tracks refreshed successfully!');
+});  
