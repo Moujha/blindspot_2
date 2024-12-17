@@ -4,7 +4,11 @@ const {
     handleSpotifyCallback, 
     refreshAccessToken 
 } = require('../controllers/spotifyController');
-const { saveTracks } = require('../controllers/trackController'); // New controller for tracks
+
+const { 
+    saveTracks ,
+    getUserTracks
+} = require('../controllers/trackController'); 
 
 
 const router = express.Router();
@@ -20,5 +24,8 @@ router.post('/refresh-token', refreshAccessToken);
 
 // Route for storing tracks in DB
 router.post('/save-tracks', saveTracks);
+
+// Route for retrieving tracks in DB
+router.get('/get-tracks/:userId', getUserTracks);
 
 module.exports = router;

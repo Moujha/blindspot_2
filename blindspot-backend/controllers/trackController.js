@@ -36,3 +36,22 @@ exports.saveTracks = async (req, res) => {
     return res.status(500).json({ error: 'Failed to save tracks.' });
   }
 };
+
+// Gets tracks from backend
+exports.getUserTracks = async (req, res) => {
+    const { userId } = req.params; // Extract userId from URL
+    
+    try {
+        if (!userId) {
+          return res.status(400).json({ error: 'User ID is required.' });
+        }
+    
+    // Query tracks for the given user ID
+    const userTracks = await Track.find({ user_id: userId }).sort({ played_at: -1 });
+    return res.status(200).json(userTracks);
+    
+} catch (error) {
+    console.error('Error fetching user tracks:', error.message);
+    return res.status(500).json({ error: 'Failed to fetch user tracks.' });
+    }
+};

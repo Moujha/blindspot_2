@@ -113,17 +113,41 @@ async function sendTracksToBackend(tracks) {
     }
 }
 
+async function fetchUserTracksFromDB() {
+  const userId = localStorage.getItem('spotifyUserId');
+
+  if (!userId) {
+      console.error('User ID is missing. Redirecting to login...');
+      window.location.href = '/';
+      return;
+  }
+
+  try {
+      const response = await fetch(`/spotify/get-tracks/${userId}`);
+
+      if (!response.ok) throw new Error('Failed to fetch user tracks from database');
+
+      const tracks = await response.json();
+      console.log('Tracks fetched from database:', tracks);
+      return tracks;
+  } catch (error) {
+      console.error('Error fetching user tracks:', error.message);
+      alert('Unable to load tracks. Please try again later.');
+      return [];
+  }
+}
 
 function groupTracksByArtist(tracks) {
     const groupedTracks = {};
   
-    tracks.forEach((item) => {
-      const artistId = item.track.artists[0].id; // Get the artist ID
-      const trackName = item.track.name; // Get the track name
-  
+    tracks.forEach((track) => {
+      const artistId = track.artist_id; // Get the artist ID
+      const trackName = track.track_name; // Get the track name
+      const trackIsrc = track.irc;
+
       // If the artist ID is not in the grouped object, initialize it
       if (!groupedTracks[artistId]) {
-        groupedTracks[artistId] = [];
+        groupedTracks[artistId] = {};
       }
   
     // If the track is already in the artist's object, increment its count
@@ -277,9 +301,6 @@ function handleTokensFromQuery() {
     window.history.replaceState({}, document.title, '/dashboard');
     }
 
-function storeTracks() {
-    
-}
 
 
 async function main() {
@@ -307,18 +328,26 @@ async function main() {
         }));
 
         await sendTracksToBackend(formattedTracks);
+        
+        // Step: Get tracks from the backend
+        const userTracks = await fetchUserTracksFromDB();
+        if (!userTracks || userTracks.length === 0) {
+          console.error('No tracks found in database.');
+          document.getElementById('artists-container').innerHTML = '<p>No tracks found.</p>';
+          return;
+      }
+      console.log('User Tracks:', userTracks);
 
-
-        // Step 3: Group tracks by artist
-        const groupedTracks = groupTracksByArtist(recentlyPlayedTracks);
-        console.log('Grouped Tracks:', groupedTracks);
-    
-        // Step 4: Fetch artist details
-        const artistIds = Object.keys(groupedTracks);
-        const artistDetails = await fetchArtistDetails(artistIds);
-    
-        // Step 5: Display artists and their tracks
-        displayArtists(groupedTracks, artistDetails);
+      // Step: Group tracks by artist
+      const groupedTracks = groupTracksByArtist(userTracks);
+      console.log('Grouped Tracks:', groupedTracks);
+  
+      // Step: Fetch artist details
+      const artistIds = Object.keys(groupedTracks);
+      const artistDetails = await fetchArtistDetails(artistIds);
+  
+      // Step: Display artists and their tracks
+      displayArtists(groupedTracks, artistDetails);
     } catch (error) {
         console.error('An error occurred in the main function:', error.message);
     }
