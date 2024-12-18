@@ -1,5 +1,6 @@
 const http = require('http');
 const app = require('./app');
+require('./cronJobs'); // Import the cron jobs
 
 
 const normalizePort = val => {
@@ -52,3 +53,4 @@ server.on('listening', () => {
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`); // Final confirmation log
   });
+
