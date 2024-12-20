@@ -174,43 +174,56 @@ function groupTracksByArtist(tracks) {
   }
   
 async function fetchArtistDetails(artistIds) {
-    const artistDetails = {};
+  const artistDetails = {};
+  const token = localStorage.getItem('spotifyAccessToken');
 
-    for (const artistId of artistIds) {
-        try {
-        const token = localStorage.getItem('spotifyAccessToken');
-        if (!token) {
-            alert('Access token is missing. Redirecting to login...');
-            window.location.href = '/';
-            return;
-        }
+  if (!token) {
+      alert('Access token is missing. Redirecting to login...');
+      window.location.href = '/';
+      return {};
+  }
 
-        const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+  const batches = [];
+  while (artistIds.length) {
+      batches.push(artistIds.splice(0, 50)); // Split artist IDs into chunks of 50
+  }
 
-        if (!response.ok) throw new Error('Failed to fetch artist details');
+  for (const batch of batches) {
+      let retry = true;
+      while (retry) {
+          try {
+              const response = await fetch(
+                  `https://api.spotify.com/v1/artists?ids=${batch.join(',')}`,
+                  { headers: { Authorization: `Bearer ${token}` } }
+              );
 
-        const data = await response.json();
+              if (response.status === 429) {
+                  const retryAfter = response.headers.get('Retry-After');
+                  const waitTime = (retryAfter ? parseInt(retryAfter) : 1) * 1000;
+                  console.warn(`Rate limited. Retrying in ${waitTime / 1000} seconds...`);
+                  await new Promise((resolve) => setTimeout(resolve, waitTime));
+              } else {
+                  retry = false; // Exit loop on success or non-429 status
+                  const data = await response.json();
+                  data.artists.forEach((artist) => {
+                      artistDetails[artist.id] = {
+                          name: artist.name,
+                          image: artist.images?.[0]?.url || 'default-artist-image.jpg',
+                      };
+                  });
+              }
+          } catch (error) {
+              console.error('Error fetching batch artist details:', error.message);
+              retry = false;
+          }
+      }
+  }
 
-        // Store the artist details in the object
-        artistDetails[artistId] = {
-            name: data.name,
-            image: data.images?.[0]?.url || 'default-artist-image.jpg',
-        };
-        } catch (error) {
-        console.error(`Error fetching details for artist ${artistId}:`, error.message);
-        artistDetails[artistId] = {
-            name: 'Unknown Artist',
-            image: 'default-artist-image.jpg',
-        };
-        }
-    }
-    return artistDetails;
-    }
+  return artistDetails;
+}
   
   
-  async function displayArtists(groupedTracks, artistDetails) {
+async function displayArtists(groupedTracks, artistDetails) {
     const container = document.getElementById('artists-container');
     container.innerHTML = ''; // Clear previous content
   
