@@ -89,7 +89,7 @@ function isTokenExpired(updatedAt) {
 }
 
 // Cron job to fetch tracks for all users
-cron.schedule('*/5 * * * *', async () => {
+cron.schedule('*/15 * * * *', async () => {
     console.log('Running periodic track fetch...');
 
     try {
