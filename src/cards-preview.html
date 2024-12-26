@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/styles-cards-preview.css">
+</head>
+<body>
+  <header>
+  </header>
+  <main>
+
+
+    <div id="artists-container" class="artists-grid">
+        <div class="artist-card" onclick="expandCard(this)">
+          <img src="https://aeronef.fr/sites/aeronef/files/styles/auto_1920/public/2023-04/%40NKRUMA2-%281%29.jpg?itok=IgKEOLB2" alt="Artist Image" class="artist-image" />
+          <div class="artist-overlay">
+            <h3 class="artist-name">BEKAR</h3>
+          </div>
+          <ul class="track-list">
+            <li>Track 1 (x3)</li>
+            <li>Track 2 (x5)</li>
+            <li>Track 3 (x2)</li>
+          </ul>
+        </div>
+
+        <div class="artist-card" onclick="expandCard(this)">
+            <img src="https://decibelsprod.com/wp-content/uploads/2023/07/Decibels-Productions_Artiste_Dali1.jpg" alt="Artist Image" class="artist-image" />
+            <div class="artist-overlay">
+              <h3 class="artist-name">DALI</h3>
+            </div>
+            <ul class="track-list">
+              <li>Track 1 (x3)</li>
+              <li>Track 2 (x5)</li>
+              <li>Track 3 (x2)</li>
+            </ul>
+          </div>
+
+          <div class="artist-card" onclick="expandCard(this)">
+            <img src="https://www.radiofrance.fr/s3/cruiser-production/2024/01/e2ef5499-937f-46ce-bb85-2fde7e5a8119/1200x680_sc_16-blickbassy-gabrieldia.webp" alt="Artist Image" class="artist-image" />
+            <div class="artist-overlay">
+              <h3 class="artist-name">Blick Bassy</h3>
+            </div>
+            <ul class="track-list">
+              <li>Track 1 (x3)</li>
+              <li>Track 2 (x5)</li>
+              <li>Track 3 (x2)</li>
+            </ul>
+          </div>
+
+          <div class="artist-card" onclick="expandCard(this)">
+            <img src="https://img.nrj.fr/_fVolv6LkGovEvUMzA9nuYx_3N0=/800x450/smart/medias%2F2022%2F10%2F633fc35a79c01_633fc3756beb4.jpg" alt="Artist Image" class="artist-image" />
+            <div class="artist-overlay">
+              <h3 class="artist-name">Orelsan</h3>
+            </div>
+            <ul class="track-list">
+              <li>Track 1 (x3)</li>
+              <li>Track 2 (x5)</li>
+              <li>Track 3 (x2)</li>
+            </ul>
+          </div>
+        <!-- Repeat for other artist cards -->
+      </div>
+      
+      <div id="expanded-view" class="hidden">
+        <button onclick="closeExpandedView()">Back</button>
+        <div class="expanded-card">
+          <img src="" alt="Expanded Artist Image" class="expanded-image" />
+          <div class="expanded-details">
+            <h3 class="expanded-name"></h3>
+            <ul class="expanded-track-list"></ul>
+          </div>
+        </div>
+      </div>
+
+</main>
+
+
+  <footer>
+  </footer>
+  <script type="module" src="scripts/card-preview.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>

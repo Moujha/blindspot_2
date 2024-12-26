@@ -34,6 +34,10 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, '../src/dashboard.html')); // Update the path as per your folder structure
 });
 
+app.get('/cards-preview', (req, res) => {
+    res.sendFile(path.join(__dirname, '../src/cards-preview.html')); // Update the path as per your folder structure
+});
+
 
 // Fallback for undefined routes
 app.use((req, res, next) => {

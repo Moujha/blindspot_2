@@ -1,0 +1,177 @@
+/* General */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #121212;
+  color: white;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* Artists Grid (List View) */
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Artist Card */
+.artist-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e1e30, #2e2e44); /* Gradient background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+}
+
+.artist-card:hover {
+  transform: translateY(-10px); /* Lift effect */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 105, 180, 0.5); /* Adds glow */
+
+}
+
+.artist-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* Ensures the image fills the area without distortion */
+  transition: transform 0.3s ease; /* Image zoom effect */
+}
+
+.artist-card:hover .artist-image {
+  transform: scale(1.1); /* Zoom effect on hover */
+}
+
+.artist-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  transform: translateY(0);
+}
+
+
+.artist-name {
+  margin: 0;
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/*track list on default view*/
+.track-list {
+  display: none; /* Hidden by default */
+  list-style: none;
+  padding: 10px;
+  margin: 10px 0 0 0;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  color: white;
+  border-radius: 10px;
+}
+
+.track-list li {
+  padding: 5px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.track-list li:last-child {
+  border-bottom: none;
+}
+
+/* Expanded View */
+#expanded-view {
+  gap: 20px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #1e1e30;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.hidden {
+  display: none;
+}
+
+.expanded-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.expanded-details {
+  flex: 1;
+}
+
+.expanded-name {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.expanded-track-list {
+  list-style: none;
+  padding: 0;
+}
+
+.expanded-track-list li {
+  margin-bottom: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.expanded-track-list li:last-child {
+  border-bottom: none;
+}
+
+#expanded-view button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+#expanded-view button:hover {
+  background: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .artists-grid {
+    grid-template-columns: 1fr; /* One card per row */
+  }
+
+  #expanded-view {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .expanded-image {
+    margin: 0 auto;
+  }
+  
+  .artist-image {
+    height: 150px; /* Reduce image height */
+  }
+
+  .artist-name {
+    font-size: 1rem; /* Adjust text size */
+  }
+
+  .track-list li {
+    font-size: 0.8rem; /* Smaller text for track list */
+  }
+}
