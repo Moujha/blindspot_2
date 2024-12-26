@@ -1,20 +1,33 @@
-function openCard(cardElement) {
-    const modal = document.querySelector('.card-modal');
-    modal.style.display = 'flex';
+document.addEventListener("DOMContentLoaded", () => {
+    const expandedView = document.getElementById("expanded-view");
+    const expandedImage = expandedView.querySelector(".expanded-image");
+    const expandedName = expandedView.querySelector(".expanded-name");
+    const expandedTrackList = expandedView.querySelector(".expanded-track-list");
+    
+    window.expandCard = function (card) {
+      // Get the artist's details
+      const artistImage = card.querySelector(".artist-image").src;
+      const artistName = card.querySelector(".artist-name").textContent;
+      const trackList = card.querySelector(".track-list").innerHTML;
   
-    // Copy the small card's image to the large modal
-    const largeImage = modal.querySelector('.card-header img');
-    const smallImage = cardElement.querySelector('.card-header img').src;
-    largeImage.src = smallImage;
-  }
+      // Populate the expanded view
+      expandedImage.src = artistImage;
+      expandedName.textContent = artistName;
+      expandedTrackList.innerHTML = trackList;
   
-  // Attach function to global scope
-  window.openCard = openCard;
+      // Show the expanded view
+      expandedView.classList.remove("hidden");
   
-  // Close the modal when clicking outside the content
-  document.querySelector('.card-modal').addEventListener('click', function (e) {
-    if (e.target === this) {
-      this.style.display = 'none';
-    }
+      // Hide the grid view
+      document.getElementById("artists-container").classList.add("hidden");
+    };
+  
+    window.closeExpandedView = function () {
+      // Hide the expanded view
+      expandedView.classList.add("hidden");
+  
+      // Show the grid view
+      document.getElementById("artists-container").classList.remove("hidden");
+    };
   });
   
