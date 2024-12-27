@@ -19,32 +19,32 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-// Middleware for serving static files from the 'src' folder
-app.use(express.static(path.join(__dirname, '../src')));
-app.use('/assets', express.static(path.join(__dirname, '../assets'))); // Serve 'assets' folder content
+// Serve static files from the 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Root route serves the main index.html file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../src/index.html'));
+    res.sendFile(path.join(__dirname, 'public', '/src/index.html'));
 });
 
 // Use Spotify routes
-app.use('/spotify', spotifyRoutes); // All Spotify-related routes start with `/spotify`
+app.use('/spotify', spotifyRoutes);
 
+// Serve additional frontend pages
 app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, '../src/dashboard.html')); // Update the path as per your folder structure
+    res.sendFile(path.join(__dirname, 'public', 'src', 'dashboard.html'));
 });
 
 app.get('/cards-preview', (req, res) => {
-    res.sendFile(path.join(__dirname, '../src/cards-preview.html')); // Update the path as per your folder structure
+    res.sendFile(path.join(__dirname, 'public', 'src', 'cards-preview.html'));
 });
 
-
 // Fallback for undefined routes
-app.use((req, res, next) => {
+app.use((req, res) => {
     res.status(404).send('Page not found');
 });
 
-//When the server starts, you’ll see a list of all the available routes.
+// Log all defined routes
 app._router.stack.forEach((middleware) => {
     if (middleware.route) {
         console.log(middleware.route.path, middleware.route.methods);
