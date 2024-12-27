@@ -1,3 +1,6 @@
+import { getLevel } from './level-logic.js'; // Adjust the path based on your folder structure
+
+
 function isTokenExpired() {
     const expiryTime = localStorage.getItem('spotifyTokenExpiry');
     return !expiryTime || Date.now() > expiryTime;
@@ -253,46 +256,46 @@ async function displayArtists(groupedTracks, artistDetails) {
   sortedArtists.forEach(({ artistId, tracks, totalTrackCount }) => {
     const { name, image } = artistDetails[artistId];
 
-    // Create the artist card element
-    const card = document.createElement("div");
-    card.classList.add("artist-card");
+  // Create the artist card element
+  const card = document.createElement("div");
+  card.classList.add("artist-card");
 
-    // Add the onclick event to expand the card
-    card.setAttribute("onclick", "expandCard(this)");
-    
-    // Sort tracks by count in descending order
-    const sortedTracks = Object.entries(tracks).sort(
-      (a, b) => b[1].count - a[1].count
-    );
+  // Use the getLevel function to calculate level and progress
+  const { level, progress } = getLevel(totalTrackCount);
 
-    // Build the card content
-    card.innerHTML = `
-      <img src="${image}" alt="${name}" class="artist-image" />
-      <div class="artist-overlay">
-        <h3 class="artist-name">${name}</h3>
+  // Add the onclick event to expand the card
+  card.setAttribute("onclick", "expandCard(this)");
+  
+  // Sort tracks by count in descending order
+  const sortedTracks = Object.entries(tracks).sort(
+    (a, b) => b[1].count - a[1].count
+  );
+
+  // Build the card content
+  card.innerHTML = `
+    <img src="${image}" alt="${name}" class="artist-image" />
+    <div class="artist-overlay">
+      <h3 class="artist-name">${name}</h3>
+    </div>
+    <div class="level-bar-container">
+      <span class="level-text current-level">${level}</span>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: ${progress}%;"></div>
       </div>
-      <div class="level-bar-container">
-        <span class="level-text current-level">1</span>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: ${Math.min(
-            (totalTrackCount / 100) * 100,
-            100
-          )}%;"></div>
-        </div>
-        <span class="level-text next-level">2</span>
-      </div>
-      <ul class="track-list" style="display: none;">
-        ${sortedTracks
-          .map(
-            ([trackName, trackData]) =>
-              `<li>${trackData.name} (x${trackData.count})</li>`
-          )
-          .join("")}
-      </ul>
-    `;
+      <span class="level-text next-level">${level + 1}</span>
+    </div>
+    <ul class="track-list" style="display: none;">
+      ${sortedTracks
+        .map(
+          ([trackName, trackData]) =>
+            `<li>${trackData.name} (x${trackData.count})</li>`
+        )
+        .join("")}
+    </ul>
+  `;
 
-    // Append the card to the container
-    container.appendChild(card);
+  // Append the card to the container
+  container.appendChild(card);
   });
 }
 
