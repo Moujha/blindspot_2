@@ -17,6 +17,16 @@
           <div class="artist-overlay">
             <h3 class="artist-name">BEKAR</h3>
           </div>
+
+          <!-- Level Progress Bar -->
+          <div class="level-bar-container">
+            <span class="level-text current-level">1</span>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 40%;"></div> <!-- Dynamically set width -->
+            </div>
+            <span class="level-text next-level">2</span>
+          </div>
+          
           <ul class="track-list">
             <li>Track 1 (x3)</li>
             <li>Track 2 (x5)</li>
@@ -29,6 +39,16 @@
             <div class="artist-overlay">
               <h3 class="artist-name">DALI</h3>
             </div>
+
+            <!-- Level Progress Bar -->
+            <div class="level-bar-container">
+                <span class="level-text current-level">1</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 40%;"></div> <!-- Dynamically set width -->
+                </div>
+                <span class="level-text next-level">2</span>
+              </div>
+
             <ul class="track-list">
               <li>Track 1 (x3)</li>
               <li>Track 2 (x5)</li>
@@ -41,6 +61,15 @@
             <div class="artist-overlay">
               <h3 class="artist-name">Blick Bassy</h3>
             </div>
+            <!-- Level Progress Bar -->
+            <div class="level-bar-container">
+                <span class="level-text current-level">1</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 40%;"></div> <!-- Dynamically set width -->
+                </div>
+                <span class="level-text next-level">2</span>
+              </div>
+
             <ul class="track-list">
               <li>Track 1 (x3)</li>
               <li>Track 2 (x5)</li>
@@ -49,16 +78,33 @@
           </div>
 
           <div class="artist-card" onclick="expandCard(this)">
-            <img src="https://img.nrj.fr/_fVolv6LkGovEvUMzA9nuYx_3N0=/800x450/smart/medias%2F2022%2F10%2F633fc35a79c01_633fc3756beb4.jpg" alt="Artist Image" class="artist-image" />
+            <!-- Artist Image -->
+            <img src="https://img.nrj.fr/_fVolv6LkGovEvUMzA9nuYx_3N0=/800x450/smart/medias%2F2022%2F10%2F633fc35a79c01_633fc3756beb4.jpg" 
+                 alt="Artist Image" 
+                 class="artist-image" />
+            
+            <!-- Overlay with Artist Name -->
             <div class="artist-overlay">
               <h3 class="artist-name">Orelsan</h3>
             </div>
-            <ul class="track-list">
+          
+            <!-- Level Progress Bar -->
+            <div class="level-bar-container">
+              <span class="level-text current-level">1</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%;"></div> <!-- Dynamically set width -->
+              </div>
+              <span class="level-text next-level">2</span>
+            </div>
+          
+            <!-- Track List -->
+            <ul class="track-list" style="display: none;"> <!-- Hidden by default -->
               <li>Track 1 (x3)</li>
               <li>Track 2 (x5)</li>
               <li>Track 3 (x2)</li>
             </ul>
           </div>
+          
         <!-- Repeat for other artist cards -->
       </div>
       

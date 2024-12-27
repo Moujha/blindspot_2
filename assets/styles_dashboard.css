@@ -8,31 +8,21 @@
   /* Ensure the entire page occupies full height */
   html, body {
     height: 100%; /* Makes the html and body elements span the full height of the viewport */
-    margin: 0; /* Removes default margins */
-    display: flex;
-    flex-direction: column; /* Stacks children vertically */
   }
   
   /* Body Styling */
   body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #121212, #191919);
-    color: #ffffff;
-    justify-content: space-between; /* Ensures header, content, and footer are spaced correctly */
-}
-/* Main Content Styling */
-main {
-    flex: 1; /* Allows the main content to expand and fill available space */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Centers content vertically */
-    text-align: center;
-    padding: 20px; /* Add padding to avoid content being too close to the edges */
-
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
   }
   
-
   
   @media (max-width: 768px) {
     #menu-toggle {
@@ -72,123 +62,6 @@ main {
 
 .refresh-button:hover {
     background-color: #169944;
-}
-  
-/* Artists Container */
-#artists-container {
-  display: flex;           /* Enable Flexbox */
-  flex-wrap: wrap;         /* Allow wrapping to the next line */
-  justify-content: center; /* Center cards horizontally */
-  gap: 16px;               /* Add spacing between cards */
-}
-
-/* Artist Card */
-.artist-card {
-  position: relative;
-  width: 30%;
-  max-width: 400px;
-  aspect-ratio: 3 / 4;
-  border-radius: 20px;
-  border: 3px solid transparent;
-  background: linear-gradient(135deg, #1e1e30, #1e1e30) padding-box, 
-              linear-gradient(135deg, #B6D0F7, #BAE4E2) border-box;
-  overflow: hidden;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.artist-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 126, 95, 0.8), 0 0 30px rgba(254, 180, 123, 0.6);
-}
-
-.artist-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures the image covers the entire card */
-  border-radius: 20px; /* Ensure the image respects the card's rounded edges */
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.artist-card:hover img {
-  transform: scale(1.1); /* Slight zoom-in effect on the image */
-  filter: brightness(1.1); /* Adds a subtle brightness effect */
-}
-
-@media (max-width: 600px) {
-  .artist-card {
-    width: 30%; /* Take more space on small screens */
-  }
-}
-
-.artist-info {
-  display: none; /* Hidden by default */
-  position: absolute;
-  bottom: 20%;
-  left: 10%;
-  right: 10%;
-  background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-  padding: 10px;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 0.9rem;
-  z-index: 2; /* Ensure it appears above other elements */
-  transition: opacity 0.3s ease;
-}
-
-.artist-info.show {
-  display: block; /* Show the element */
-}
-
-
-/* Overlay */
-.artist-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-
-/* Artist Name Text */
-.artist-name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-/* Artist Info */
-.artist-info {
-  display: none;
-  position: absolute;
-  bottom: 20%;
-  left: 10%;
-  right: 10%;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  font-size: 0.9rem;
-  z-index: 2;
-  transition: opacity 0.3s ease;
-}
-
-.artist-info.show {
-  display: block;
 }
 
 /* Footer Styling */

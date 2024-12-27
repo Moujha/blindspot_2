@@ -74,7 +74,7 @@ async function fetchRecentlyPlayed(lastPlayedAt = null) {
         await refreshAccessToken(); // Refresh token
         return fetchRecentlyPlayed(lastPlayedAt); // Retry the request
     }
-    
+
       if (!response.ok) throw new Error('Failed to fetch recently played tracks');
   
       const data = await response.json();
@@ -230,74 +230,66 @@ async function fetchArtistDetails(artistIds) {
   
   
 async function displayArtists(groupedTracks, artistDetails) {
-    const container = document.getElementById('artists-container');
-    container.innerHTML = ''; // Clear previous content
-  
-    // Step 1: Convert groupedTracks into an array of [artistId, tracks]
-    const sortedArtists = Object.entries(groupedTracks).map(([artistId, tracks]) => {
+  const container = document.getElementById("artists-container");
+  container.innerHTML = ""; // Clear previous content
+
+  // Step 1: Convert groupedTracks into an array of [artistId, tracks]
+  const sortedArtists = Object.entries(groupedTracks).map(
+    ([artistId, tracks]) => {
       // Calculate total track count for each artist
-      const totalTrackCount = Object.values(tracks).reduce((sum, track) => sum + track.count, 0);
-  
+      const totalTrackCount = Object.values(tracks).reduce(
+        (sum, track) => sum + track.count,
+        0
+      );
+
       return { artistId, tracks, totalTrackCount };
-    });
-  
-    // Step 2: Sort the array based on totalTrackCount in descending order
-    sortedArtists.sort((a, b) => b.totalTrackCount - a.totalTrackCount);
-  
-    // Step 3: Render the sorted artist cards
-    sortedArtists.forEach(({ artistId, tracks, totalTrackCount }) => {
-      const { name, image } = artistDetails[artistId];
-  
-      // Create the artist card element
-      const card = document.createElement('div');
-      card.classList.add('artist-card');
-  
-      // Create the track list element (hidden initially)
-      const trackList = document.createElement('ul');
-      trackList.classList.add('track-list');
-      trackList.style.display = 'none'; // Hide initially
-  
-      // Populate the track list
-      Object.entries(tracks).forEach(([trackName, trackData]) => {
-        const trackItem = document.createElement('li');
-        trackItem.textContent = `${trackData.name} (x${trackData.count})`;
-        trackList.appendChild(trackItem);
-      });
-  
-      // Create the toggle button
-      const toggleButton = document.createElement('button');
-      toggleButton.textContent = '+';
-      toggleButton.classList.add('toggle-button');
-  
-      // Add click event to toggle the track list
-      toggleButton.addEventListener('click', () => {
-        if (trackList.style.display === 'none') {
-          trackList.style.display = 'block'; // Show tracks
-          toggleButton.textContent = '-';
-        } else {
-          trackList.style.display = 'none'; // Hide tracks
-          toggleButton.textContent = '+';
-        }
-      });
-  
-      // Build the card content
-      card.innerHTML = `
-        <img src="${image}" alt="${name}" />
-        <div class="artist-info">
-          <h2>${name}</h2>
-          <p>Total Tracks Played: ${totalTrackCount}</p>
+    }
+  );
+
+  // Step 2: Sort the array based on totalTrackCount in descending order
+  sortedArtists.sort((a, b) => b.totalTrackCount - a.totalTrackCount);
+
+  // Step 3: Render the sorted artist cards
+  sortedArtists.forEach(({ artistId, tracks, totalTrackCount }) => {
+    const { name, image } = artistDetails[artistId];
+
+    // Create the artist card element
+    const card = document.createElement("div");
+    card.classList.add("artist-card");
+
+    // Add the onclick event to expand the card
+    card.setAttribute("onclick", "expandCard(this)");
+
+    // Build the card content
+    card.innerHTML = `
+      <img src="${image}" alt="${name}" class="artist-image" />
+      <div class="artist-overlay">
+        <h3 class="artist-name">${name}</h3>
+      </div>
+      <div class="level-bar-container">
+        <span class="level-text current-level">1</span>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${Math.min(
+            (totalTrackCount / 100) * 100,
+            100
+          )}%;"></div>
         </div>
-      `;
-  
-      // Append elements to the card
-      card.appendChild(toggleButton);
-      card.appendChild(trackList);
-  
-      // Append the card to the container
-      container.appendChild(card);
-    });
-  }
-    
+        <span class="level-text next-level">2</span>
+      </div>
+      <ul class="track-list" style="display: none;">
+        ${Object.entries(tracks)
+          .map(
+            ([trackName, trackData]) =>
+              `<li>${trackData.name} (x${trackData.count})</li>`
+          )
+          .join("")}
+      </ul>
+    `;
+
+    // Append the card to the container
+    container.appendChild(card);
+  });
+}
 
 function handleTokensFromQuery() {
     console.log('Handling tokens from query...');
@@ -327,9 +319,6 @@ function handleTokensFromQuery() {
     // Clean up the URL
     window.history.replaceState({}, document.title, '/dashboard');
     }
-
-
-
 
 
 async function main() {
