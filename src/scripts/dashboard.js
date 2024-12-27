@@ -259,6 +259,11 @@ async function displayArtists(groupedTracks, artistDetails) {
 
     // Add the onclick event to expand the card
     card.setAttribute("onclick", "expandCard(this)");
+    
+    // Sort tracks by count in descending order
+    const sortedTracks = Object.entries(tracks).sort(
+      (a, b) => b[1].count - a[1].count
+    );
 
     // Build the card content
     card.innerHTML = `
@@ -277,7 +282,7 @@ async function displayArtists(groupedTracks, artistDetails) {
         <span class="level-text next-level">2</span>
       </div>
       <ul class="track-list" style="display: none;">
-        ${Object.entries(tracks)
+        ${sortedTracks
           .map(
             ([trackName, trackData]) =>
               `<li>${trackData.name} (x${trackData.count})</li>`
