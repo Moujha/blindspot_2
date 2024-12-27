@@ -21,12 +21,18 @@ body {
 /* Artist Card */
 .artist-card {
   position: relative;
+  width: 100%;
+  padding-top: 133.33%; /* (4 / 3) * 100 for a 3:4 ratio */
   border-radius: 20px;
   overflow: hidden;
   background: linear-gradient(135deg, #1e1e30, #2e2e44); /* Gradient background */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+}
+
+.artist-card > * {
+  position: absolute; /* Ensure child elements are positioned relative to the card */
 }
 
 .artist-card:hover {
@@ -36,9 +42,12 @@ body {
 }
 
 .artist-image {
-  width: 100%;
-  height: 200px;
+  top: 0;
+  left: 0;
+  width: 100%; /* Ensure it spans the full width */
+  height: 100%; /* Ensure it spans the full height */
   object-fit: cover; /* Ensures the image fills the area without distortion */
+  z-index: 1; /* Place below the overlay */
   transition: transform 0.3s ease; /* Image zoom effect */
 }
 
@@ -46,19 +55,21 @@ body {
   transform: scale(1.1); /* Zoom effect on hover */
 }
 
+/* Overlay */
 .artist-overlay {
-  position: absolute;
-  bottom: 0;
+  position: absolute; /* Ensure it's absolutely positioned */
+  bottom: 0; /* Place at the bottom of the card */
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)); /* Gradient background */
   padding: 10px 15px;
   text-align: center;
+  z-index: 2; /* Ensure it appears above the image */
   transition: transform 0.3s ease;
   transform: translateY(0);
 }
 
-
+/* Artist Name */
 .artist-name {
   margin: 0;
   font-size: 1.2rem;
