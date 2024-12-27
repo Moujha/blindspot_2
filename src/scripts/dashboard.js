@@ -68,7 +68,13 @@ async function fetchRecentlyPlayed(lastPlayedAt = null) {
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+      
+      if (response.status === 401) {
+        console.log('Access token expired. Attempting refresh...');
+        await refreshAccessToken(); // Refresh token
+        return fetchRecentlyPlayed(lastPlayedAt); // Retry the request
+    }
+    
       if (!response.ok) throw new Error('Failed to fetch recently played tracks');
   
       const data = await response.json();
@@ -151,7 +157,7 @@ function groupTracksByArtist(tracks) {
     tracks.forEach((track) => {
       const artistId = track.artist_id; // Get the artist ID
       const trackName = track.track_name; // Get the track name
-      const trackIsrc = track.irc;
+      const trackIsrc = track.isrc;
 
       // If the artist ID is not in the grouped object, initialize it
       if (!groupedTracks[artistId]) {
