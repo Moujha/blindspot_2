@@ -32,7 +32,6 @@ export async function sendTracksToBackend(tracks) {
           }
   
           console.log('Tracks sent successfully to backend.');
-          alert('Tracks saved successfully!');
       } catch (error) {
           console.error('Error sending tracks to backend:', error.message);
           alert('Failed to save tracks. Please try again.');
