@@ -1,6 +1,16 @@
+// Determine the base URL dynamically
+const isLocalhost = window.location.hostname === 'localhost';
+const baseUrl = isLocalhost
+    ? 'http://localhost:3000' // Local backend URL
+    : 'https://your-app.onrender.com'; // Render backend URL
+
 // Spotify Client ID (Safe to expose)
 const clientId = 'c2fd787be177437799de06b6062ddc9a'; 
-const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'https://tunedeck.onrender.com/spotify/callback';
+
+// Redirect URI dynamically set
+const redirectUri = isLocalhost
+    ? 'http://localhost:3000/spotify/callback' // Local callback
+    : 'https://your-app.onrender.com/spotify/callback'; // Render callback
 
 
 
@@ -10,7 +20,7 @@ const scopes = [
 ];
 
 function spotifyLogin() {
-    const authUrl = `http://localhost:3000/spotify/auth`; // Redirects through your backend
+    const authUrl = `${baseUrl}/spotify/auth`;
     window.location.href = authUrl; // Redirect user to Spotify's authorization page
 }
 
@@ -35,7 +45,7 @@ function handleAuthorizationCode() {
 }
 
 function exchangeAuthorizationCodeForToken(code) {
-    fetch('/spotify/callback', { // Hits your backend's callback endpoint
+    fetch(`${baseUrl}/spotify/callback`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
