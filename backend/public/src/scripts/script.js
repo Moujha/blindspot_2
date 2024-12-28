@@ -2,7 +2,7 @@
 const isLocalhost = window.location.hostname === 'localhost';
 const baseUrl = isLocalhost
     ? 'http://localhost:3000' // Local backend URL
-    : 'https://your-app.onrender.com'; // Render backend URL
+    : 'https://tunedeck.onrender.com'; // Render backend URL
 
 // Spotify Client ID (Safe to expose)
 const clientId = 'c2fd787be177437799de06b6062ddc9a'; 
@@ -10,7 +10,7 @@ const clientId = 'c2fd787be177437799de06b6062ddc9a';
 // Redirect URI dynamically set
 const redirectUri = isLocalhost
     ? 'http://localhost:3000/spotify/callback' // Local callback
-    : 'https://your-app.onrender.com/spotify/callback'; // Render callback
+    : 'https://tunedeck.onrender.com/spotify/callback'; // Render callback
 
 
 
