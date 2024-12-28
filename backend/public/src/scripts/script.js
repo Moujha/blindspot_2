@@ -1,6 +1,6 @@
 // Spotify Client ID (Safe to expose)
 const clientId = 'c2fd787be177437799de06b6062ddc9a'; 
-const redirectUri = 'http://localhost:3000/spotify/callback'; // Backend route for handling Spotify callback
+const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'https://tunedeck.onrender.com/spotify/callback';
 
 
 

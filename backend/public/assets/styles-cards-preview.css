@@ -38,7 +38,6 @@ body {
 .artist-card:hover {
   transform: translateY(-10px); /* Lift effect */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 105, 180, 0.5); /* Adds glow */
-
 }
 
 .artist-image {
@@ -73,12 +72,22 @@ body {
 .artist-name {
   margin: 0;
   padding: 30px 0px;
-
   font-size: 1.2rem;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
+
+  /* Handle long text */
+  overflow: hidden; /* Hides overflowing text */
+  text-overflow: ellipsis; /* Adds "..." to truncated text */
+  white-space: nowrap; /* Prevents wrapping to the next line */
+
+  /* Ensure equal padding on both sides */
+  padding-left: 10%;
+  padding-right: 10%; /* Adjust 10px to match your desired spacing */
+  box-sizing: border-box; /* Includes padding in width calculation */
+  
 }
 
 /* Level Bar Container */
@@ -214,7 +223,8 @@ body {
 
 @media (max-width: 600px) {
   .artists-grid {
-    grid-template-columns: 1fr; /* One card per row */
+    grid-template-columns: repeat(2cd , 1fr); /* Always 3 cards per row */
+    gap: 10px; /* Adjust spacing between cards */
   }
 
   #expanded-view {
@@ -225,10 +235,9 @@ body {
   .expanded-image {
     margin: 0 auto;
   }
-  
 
   .artist-name {
-    font-size: 1rem; /* Adjust text size */
+    font-size: 0.9rem; /* Adjust text size for smaller screens */
   }
 
   .track-list li {

@@ -58,6 +58,56 @@
     background-color: #169944;
 }
 
+/* Navbar Styles */
+.navbar {
+  position: fixed; /* Stick to the bottom of the viewport */
+  bottom: 0; /* Align it at the bottom */
+  left: 0;
+  width: 100%; /* Full-width navbar */
+  background: #121212; /* Navbar background */
+  color: white;
+  z-index: 1000; /* Ensure it's above other elements */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 105, 180, 0.5); /* Adds glow */
+  border-radius: 15px 15px 0 0; /* Rounded top corners */
+  padding: 10px 0; /* Padding inside the navbar */
+}
+
+/* Navbar List */
+.navbar-list {
+  display: flex;
+  justify-content: space-around; /* Evenly space menu options */
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Navbar Links */
+.navbar-list li a {
+  display: flex;
+  flex-direction: column; /* Stack icon and text */
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 5px 10px;
+  transition: color 0.3s ease;
+}
+
+.navbar-list li a i {
+  font-size: 1.5rem; /* Icon size */
+  margin-bottom: 5px; /* Space between icon and text */
+}
+
+.navbar-list li a:hover {
+  color: #1db954; /* Spotify green for hover effect */
+}
+
+
+
+
 /* Footer Styling */
 footer {
   padding: 10px;
