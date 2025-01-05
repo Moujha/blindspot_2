@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const connectDB = require('./db'); // Import MongoDB connection function
 const spotifyRoutes = require('./routes/spotifyRoutes'); // Import Spotify routes
+const userRoutes = require('./routes/userRoutes');
 
 require('dotenv').config(); // Load .env variables
 
@@ -38,6 +39,16 @@ app.get('/dashboard', (req, res) => {
 app.get('/cards-preview', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'src', 'cards-preview.html'));
 });
+
+app.get('/social', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'src', 'social.html'));
+});
+
+// Use Users routes
+app.use('/users', userRoutes);
+
+
+
 
 // Fallback for undefined routes
 app.use((req, res) => {

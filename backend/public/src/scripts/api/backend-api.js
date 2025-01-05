@@ -62,3 +62,17 @@ export async function fetchUserTracksFromDB() {
         return [];
     }
   }
+
+
+  export async function fetchUsers() {
+    try {
+      const response = await fetch('/users');
+      if (!response.ok) throw new Error('Failed to fetch users');
+      const users = await response.json();
+      return users;
+    } catch (error) {
+      console.error('Error fetching users:', error.message);
+      throw error; // Let the calling function handle the error
+    }
+  }
+  
