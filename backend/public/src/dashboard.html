@@ -31,15 +31,11 @@
       </div>
     </div>
     <div id="navbar-container"></div>
-      <script>
-        fetch('/src/navbar.html')
-          .then((response) => response.text())
-          .then((html) => {
-            document.getElementById('navbar-container').innerHTML = html;
-          })
-          .catch((error) => {
-            console.error('Error loading navbar:', error);
-          });
+      <script type="module">
+        import { loadNavbar } from '/src/scripts/ui/navbar.js';
+      
+        // Load the navbar
+        loadNavbar('navbar-container');
       </script>
   </main>
   <footer>

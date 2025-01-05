@@ -105,7 +105,10 @@
   color: #1db954; /* Spotify green for hover effect */
 }
 
-
+.navbar-list li a.active {
+  color: #1db954; /* Spotify green */
+  font-weight: bold;
+}
 
 
 /* Footer Styling */

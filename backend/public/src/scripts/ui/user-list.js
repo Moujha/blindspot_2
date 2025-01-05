@@ -11,7 +11,7 @@ export async function renderUserList(containerId) {
         ${users
           .map(
             (user) =>
-              `<li>${user.name} (Collection Size: ${user.collectionSize})</li>`
+              `<li>${user.spotify_id} (Collection Size: ${user.collectionSize})</li>`
           )
           .join('')}
       </ul>

@@ -14,17 +14,12 @@
     <h1>Social</h1>
     <div id="user-list"></div>
   </div>
-  <script>
-    // Load the navbar
-    fetch('/src/navbar.html')
-      .then((response) => response.text())
-      .then((html) => {
-        document.getElementById('navbar-container').innerHTML = html;
-      })
-      .catch((error) => {
-        console.error('Error loading navbar:', error);
-      });
-  </script>
+    <script type="module">
+        import { loadNavbar } from '/src/scripts/ui/navbar.js';
+    
+        // Load the navbar
+        loadNavbar('navbar-container');
+    </script>
   <script type="module">
     import { renderUserList } from '/src/scripts/ui/user-list.js';
 
