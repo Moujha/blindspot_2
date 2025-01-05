@@ -7,6 +7,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true, // Spotify user ID is unique
     },
+    pseudo: {
+      type: String,
+      required: true,
+      unique: true, // Spotify user ID is unique
+    },
     access_token: {
       type: String,
       required: true,

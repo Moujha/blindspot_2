@@ -20,7 +20,7 @@ const getUserList = async (req, res) => {
       },
       {
         $project: {
-          spotify_id: 1, // Include userId
+          pseudo: 1, // Include userId
           collectionSize: 1, // Include collectionSize
         },
       },
