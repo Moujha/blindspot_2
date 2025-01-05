@@ -9,6 +9,14 @@ const User = require('../models/User'); // Import the User model
  */
 async function storeOrUpdateUser(spotifyUser, access_token, refresh_token) {
   try {
+   
+    // Log incoming data for debugging
+    console.log('MongoDB StoreOrUpdate User:');
+    console.log('Spotify User:', spotifyUser);
+    console.log('Access Token:', access_token);
+    console.log('Refresh Token:', refresh_token);
+    console.log('UserId:', spotifyUser.id);
+        
     const user = await User.findOneAndUpdate(
       { spotify_id: spotifyUser.id }, // Query: Find user by Spotify ID
       {

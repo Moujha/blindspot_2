@@ -23,6 +23,10 @@ exports.redirectToSpotify = (req, res) => {
 
 // Handle Spotify callback and exchange authorization code for access token
 exports.handleSpotifyCallback = async (req, res) => {
+    console.log('Spotify Callback Hit!'); // Log to confirm the route is hit
+    console.log('Request Body:', req.body); // Log the request body to debug
+    console.log('Request Query:', req.query); // Log the query parameters to debug
+
     const code = req.query.code;
 
     console.log('Sending authorization code to Spotify:', code);
@@ -58,7 +62,6 @@ exports.handleSpotifyCallback = async (req, res) => {
             },
         });
 
-        const spotifyUser = userProfileResponse.data;
         
         // Call the modular function to store/update user in the database
         const user = await storeOrUpdateUser(spotifyUser, access_token, refresh_token);
