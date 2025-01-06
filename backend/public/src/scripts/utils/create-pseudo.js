@@ -42,8 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
   
         // Redirect to the dashboard with tokens
-        console.log('Redirecting to:', dashboardUrl);
         const dashboardUrl = `/dashboard?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`;
+        console.log('Redirecting to:', dashboardUrl);
+
         window.location.href = dashboardUrl;
       } catch (error) {
         console.error('Error saving pseudo:', error);
