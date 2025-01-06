@@ -47,8 +47,10 @@ app.get('/social', (req, res) => {
 // Use Users routes
 app.use('/users', userRoutes);
 
-
-
+// Serve create-pseudo.html
+app.get('/create-pseudo', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'src', 'create-pseudo.html'));
+  });
 
 // Fallback for undefined routes
 app.use((req, res) => {

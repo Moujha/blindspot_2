@@ -62,14 +62,21 @@ exports.handleSpotifyCallback = async (req, res) => {
             },
         });
 
-        
+        const spotifyUser = userProfileResponse.data; 
+        console.log('Spotify User Profile:', spotifyUser);
+
         // Call the modular function to store/update user in the database
-        const user = await storeOrUpdateUser(spotifyUser, access_token, refresh_token);
+        const { user, needsPseudo } = await storeOrUpdateUser(spotifyUser, access_token, refresh_token);
         console.log('User stored/updated in the database:', user);
      
         console.log('Tokens generated:', { access_token, refresh_token, expires_in }); //log to debug
 
-        // Redirect to front-end with userId and tokens
+        if (needsPseudo) {
+            // Redirect to pseudo creation screen if pseudo is missing
+            return res.redirect(`/create-pseudo?userId=${user._id}`);
+        }
+
+        // Otherwise redirect to front-end with userId and tokens
         res.redirect(`/dashboard?userId=${user._id}&access_token=${access_token}&refresh_token=${refresh_token}&expires_in=${expires_in}`);
         } catch (error) {
             console.error(

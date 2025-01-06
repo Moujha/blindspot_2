@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Pseudo</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Create Your Pseudo</h1>
+    <form id="pseudo-form">
+      <!-- Hidden input to pass the userId -->
+      <input type="hidden" id="userId" value="">
+      <!-- Text field for pseudo -->
+      <label for="pseudo">Choose your pseudo:</label>
+      <input type="text" id="pseudo" name="pseudo" placeholder="Enter your pseudo" required />
+      <!-- Submit button -->
+      <button type="submit">Save</button>
+    </form>
+    <!-- Error message -->
+    <p id="error-message" style="color: red; display: none;"></p>
+  </div>
+
+  <script src="../src/scripts/utils/create-pseudo.js"></script>
+</body>
+</html>

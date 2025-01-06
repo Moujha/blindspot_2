@@ -64,15 +64,15 @@ export async function fetchUserTracksFromDB() {
   }
 
 
-  export async function fetchUsers() {
+export async function fetchUsers() {
     try {
-      const response = await fetch('/users');
-      if (!response.ok) throw new Error('Failed to fetch users');
-      const users = await response.json();
-      return users;
+        const response = await fetch('/users');
+        if (!response.ok) throw new Error('Failed to fetch users');
+        const users = await response.json();
+        return users;
     } catch (error) {
-      console.error('Error fetching users:', error.message);
-      throw error; // Let the calling function handle the error
+        console.error('Error fetching users:', error.message);
+        throw error; // Let the calling function handle the error
     }
-  }
-  
+}
+

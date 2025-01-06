@@ -28,7 +28,13 @@ async function storeOrUpdateUser(spotifyUser, access_token, refresh_token) {
       { upsert: true, new: true, setDefaultsOnInsert: true } // Options
     );
 
-    return user;
+    // Check if the user has a pseudo
+    const needsPseudo = !user.pseudo;
+    console.log('Does the user need a pseudo?', needsPseudo);
+
+
+    return { user, needsPseudo }; // Return both user and pseudo status
+
   } catch (error) {
     console.error('Error storing/updating user in the database:', error.message);
     throw error;
