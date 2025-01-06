@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Extract userId from the query string
+    // Extract query parameters
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('userId');
+    const accessToken = urlParams.get('access_token');
+    const refreshToken = urlParams.get('refresh_token');
+    const expiresIn = urlParams.get('expires_in');
+  
+    // Set the hidden userId input field
     document.getElementById('userId').value = userId;
   
     // Form submission handler
@@ -36,8 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
   
-        // Redirect to the dashboard upon success
-        window.location.href = '/dashboard';
+        // Redirect to the dashboard with tokens
+        console.log('Redirecting to:', dashboardUrl);
+        const dashboardUrl = `/dashboard?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`;
+        window.location.href = dashboardUrl;
       } catch (error) {
         console.error('Error saving pseudo:', error);
         const errorMessage = document.getElementById('error-message');

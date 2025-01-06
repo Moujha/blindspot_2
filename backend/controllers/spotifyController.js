@@ -73,8 +73,12 @@ exports.handleSpotifyCallback = async (req, res) => {
 
         if (needsPseudo) {
             // Redirect to pseudo creation screen if pseudo is missing
-            return res.redirect(`/create-pseudo?userId=${user._id}`);
-        }
+            if (needsPseudo) {
+                // Redirect to create-pseudo with tokens
+                return res.redirect(
+                  `/create-pseudo?userId=${user._id}&access_token=${access_token}&refresh_token=${refresh_token}&expires_in=${expires_in}`
+                );
+              }        }
 
         // Otherwise redirect to front-end with userId and tokens
         res.redirect(`/dashboard?userId=${user._id}&access_token=${access_token}&refresh_token=${refresh_token}&expires_in=${expires_in}`);
