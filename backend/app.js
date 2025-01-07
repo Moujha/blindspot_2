@@ -3,6 +3,7 @@ const path = require('path');
 const connectDB = require('./db'); // Import MongoDB connection function
 const spotifyRoutes = require('./routes/spotifyRoutes'); // Import Spotify routes
 const userRoutes = require('./routes/userRoutes');
+const artistCardRoutes = require('./routes/artistCardRoutes.js'); // Import artist cards routes
 
 require('dotenv').config(); // Load .env variables
 
@@ -51,6 +52,9 @@ app.use('/users', userRoutes);
 app.get('/create-pseudo', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'src', 'create-pseudo.html'));
   });
+
+app.use('/artist', artistCardRoutes);
+
 
 // Fallback for undefined routes
 app.use((req, res) => {

@@ -13,8 +13,14 @@ async function main() {
 
         // Fetch user tracks from the backend
         const userTracks = await fetchUserTracksFromDB();
-        const lastPlayedAt = userTracks.lastPlayedAt || null;
-        console.log('Tracks from database:', userTracks);
+        const lastPlayedAt = userTracks.length > 0
+        ? userTracks.reduce((latest, track) => {
+            const playedAtDate = new Date(track.played_at).getTime();
+            return playedAtDate > latest ? playedAtDate : latest;
+          }, 0)
+        : null;
+      
+      console.log('Last Played At:', lastPlayedAt ? new Date(lastPlayedAt).toISOString() : null);        console.log('Tracks from database:', userTracks);
         console.log('Last Played At:', lastPlayedAt);
 
         // Step: Fetch recently played tracks
@@ -54,7 +60,6 @@ async function main() {
     }
     }
       
-
 main();
 
 document.getElementById('refresh-button').addEventListener('click', async () => {

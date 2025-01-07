@@ -1,6 +1,9 @@
 const axios = require('axios');
 const Track = require('../models/Track'); // Import Track model
+const ArtistCard = require('../models/ArtistCard');
 
+const { handleArtistDiscovery } = require('../services/artistCardService.js');
+const { fetchSingleArtistDetails } = require('../public/src/scripts/api/spotify-api.js');
 
 // Saves tracks to backend
 exports.saveTracks = async (req, res) => {
@@ -15,7 +18,7 @@ exports.saveTracks = async (req, res) => {
     const trackDocuments = tracks.map((track) => ({
       user_id: userId,
       isrc: track.isrc,
-      track_name: track.track_name, //we may have an issue here > track.external_ids.isrc
+      track_name: track.track_name, 
       artist_id: track.artist_id,
       artist_name: track.artist_name,
       played_at: new Date(track.played_at),
@@ -24,6 +27,29 @@ exports.saveTracks = async (req, res) => {
 
     // Insert or update tracks
     await Track.insertMany(trackDocuments, { ordered: false });
+
+    // Handle artist discovery
+    for (const track of tracks) {
+      const artistId = track.artist_id;
+
+      // Check if an artist card already exists for this artist and user
+      const existingArtistCard = await ArtistCard.findOne({
+        user_id: userId,
+        artist_id: artistId,
+      });
+
+      if (!existingArtistCard) {
+        console.log(`First track by artist ${artistId} for user ${userId}. Unlocking artist card...`);
+
+        // Fetch artist details from Spotify
+        const artistDetails = await fetchSingleArtistDetails(artistId, req.headers.authorization);
+
+        // Create and unlock the artist card
+        await handleArtistDiscovery(userId, artistId, artistDetails);
+      } else {
+        console.log(`User ${userId} already has a card for artist ${artistId}.`);
+      }
+    }
 
     return res.status(200).json({ message: 'Tracks saved successfully.' });
   } catch (error) {

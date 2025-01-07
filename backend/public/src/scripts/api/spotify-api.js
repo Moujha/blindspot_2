@@ -82,8 +82,11 @@ export async function fetchArtistDetails(artistIds) {
                     const data = await response.json();
                     data.artists.forEach((artist) => {
                         artistDetails[artist.id] = {
-                            name: artist.name,
-                            image: artist.images?.[0]?.url || 'default-artist-image.jpg',
+                          name: artist.name,
+                          image: artist.images?.[0]?.url || 'default-artist-image.jpg',
+                          genres: artist.genres || [],
+                          popularity: artist.popularity || null,
+                          monthly_listeners: artist.followers?.total || null,
                         };
                     });
                 }
@@ -96,4 +99,67 @@ export async function fetchArtistDetails(artistIds) {
   
     return artistDetails;
   }
-    
+  
+
+export async function fetchSingleArtistDetails(artistIds, accessToken) {
+    if (!accessToken) {
+      throw new Error('Access token is required to fetch artist details.');
+    }
+  
+    // Ensure artistIds is an array
+    artistIds = Array.isArray(artistIds) ? artistIds : [artistIds];
+  
+    const artistDetails = {};
+  
+    try {
+      const batches = [];
+      while (artistIds.length) {
+        batches.push(artistIds.splice(0, 50)); // Split into batches of 50
+      }
+  
+      for (const batch of batches) {
+        let retry = true;
+        while (retry) {
+          try {
+            const response = await axios.get(
+              `https://api.spotify.com/v1/artists?ids=${batch.join(',')}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            );
+  
+            retry = false; // Exit retry loop on success
+  
+            response.data.artists.forEach((artist) => {
+              artistDetails[artist.id] = {
+                name: artist.name,
+                image: artist.images?.[0]?.url || 'default-artist-image.jpg',
+                genres: artist.genres || [],
+                popularity: artist.popularity || null,
+                monthly_listeners: artist.followers?.total || null,
+              };
+            });
+          } catch (error) {
+            if (error.response?.status === 429) {
+              const retryAfter = error.response.headers['retry-after'] || 1;
+              const waitTime = parseInt(retryAfter) * 1000;
+              console.warn(`Rate limited. Retrying in ${waitTime / 1000} seconds...`);
+              await new Promise((resolve) => setTimeout(resolve, waitTime));
+            } else {
+              retry = false;
+              console.error('Error fetching artist details:', error.message);
+              throw error;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error in fetchArtistDetails:', error.message);
+      throw error;
+    }
+  
+    return artistDetails;
+  }
+  
