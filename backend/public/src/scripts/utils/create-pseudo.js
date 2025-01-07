@@ -6,6 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshToken = urlParams.get('refresh_token');
     const expiresIn = urlParams.get('expires_in');
   
+    // Debug logs to confirm extracted values
+    console.log('UserId:', userId);
+    console.log('Access Token:', accessToken);
+    console.log('Refresh Token:', refreshToken);
+    console.log('Expires In:', expiresIn);
+  
+    // Handle missing userId or tokens
+    if (!userId) {
+      console.error('Missing userId. Redirecting to home.');
+      window.location.href = '/';
+      return;
+    }
+  
+    if (!accessToken || !refreshToken || !expiresIn) {
+      console.warn('Missing tokens in query parameters. Proceeding without tokens.');
+    }
+  
     // Set the hidden userId input field
     document.getElementById('userId').value = userId;
   
@@ -41,10 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
   
-        // Redirect to the dashboard with tokens
-        const dashboardUrl = `/dashboard?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`;
+        // Build the dashboard URL with tokens (if available)
+        let dashboardUrl = '/dashboard';
+        if (accessToken && refreshToken && expiresIn) {
+          dashboardUrl += `?access_token=${accessToken}&refresh_token=${refreshToken}&expires_in=${expiresIn}`;
+        }
+  
         console.log('Redirecting to:', dashboardUrl);
-
+  
+        // Redirect to the dashboard
         window.location.href = dashboardUrl;
       } catch (error) {
         console.error('Error saving pseudo:', error);

@@ -38,30 +38,45 @@ export async function refreshAccessToken() {
 }
 
 export function handleTokensFromQuery() {
-    console.log('Handling tokens from query...');
+  console.log('Handling tokens from query...');
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('access_token');
-    const refreshToken = urlParams.get('refresh_token');
-    const expiresIn = urlParams.get('expires_in');
-    const userId = urlParams.get('userId'); // Extract userId
+  // Extract query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const accessToken = urlParams.get('access_token');
+  const refreshToken = urlParams.get('refresh_token');
+  const expiresIn = urlParams.get('expires_in');
+  const userId = urlParams.get('userId'); // Extract userId
 
+  // Check if tokens are in query string or localStorage
+  const storedAccessToken = localStorage.getItem('spotifyAccessToken');
+  const storedRefreshToken = localStorage.getItem('spotifyRefreshToken');
+  const storedUserId = localStorage.getItem('spotifyUserId');
 
-    if (accessToken) {
-        // Store tokens in localStorage for later use
-        localStorage.setItem('spotifyAccessToken', accessToken);
-        localStorage.setItem('spotifyRefreshToken', refreshToken);
-        localStorage.setItem('spotifyTokenExpiry', Date.now() + expiresIn * 1000);
+  // Use query parameters if available, otherwise fallback to stored tokens
+  const finalAccessToken = accessToken || storedAccessToken;
+  const finalRefreshToken = refreshToken || storedRefreshToken;
+  const finalUserId = userId || storedUserId;
 
-        console.log('Access Token:', accessToken);
-    }
+  if (!finalAccessToken || !finalRefreshToken || !finalUserId) {
+    console.error('Missing tokens or user ID. Redirecting to login.');
+    window.location.href = '/';
+    return;
+  }
 
-    if (userId) {
-      // Store user ID in localStorage
-      localStorage.setItem('spotifyUserId', userId);
-      console.log('User ID:', userId);
-    }
+  // Store tokens in localStorage
+  if (accessToken) {
+    localStorage.setItem('spotifyAccessToken', finalAccessToken);
+    localStorage.setItem('spotifyRefreshToken', finalRefreshToken);
+    localStorage.setItem('spotifyTokenExpiry', Date.now() + expiresIn * 1000);
+    console.log('Access Token stored:', finalAccessToken);
+  }
 
-    // Clean up the URL
-    window.history.replaceState({}, document.title, '/dashboard');
-    }
+  // Store user ID in localStorage
+  if (userId) {
+    localStorage.setItem('spotifyUserId', finalUserId);
+    console.log('User ID stored:', finalUserId);
+  }
+
+  // Clean up the URL
+  window.history.replaceState({}, document.title, '/dashboard');
+}
