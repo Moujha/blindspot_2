@@ -1,4 +1,4 @@
-const ArtistCard = require('../models/ArtistCard.js');
+import ArtistCard from '../models/ArtistCard.js';
 
 // Check if an artist card exists
 async function doesArtistCardExist(userId, artistId) {
@@ -25,7 +25,7 @@ async function createArtistCard(userId, artistId, artistDetails) {
  * @param {String} artistId - The Spotify artist ID.
  * @param {Object} artistDetails - Details of the artist (genres, popularity, etc.).
  */
-async function handleArtistDiscovery(userId, artistId, artistDetails) {
+export async function handleArtistDiscovery(userId, artistId, artistDetails) {
   try {
     // Check if the user has already discovered this artist
     const existingCard = await doesArtistCardExist(userId, artistId);
@@ -42,4 +42,3 @@ async function handleArtistDiscovery(userId, artistId, artistDetails) {
   }
 }
 
-module.exports = { handleArtistDiscovery };

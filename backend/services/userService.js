@@ -1,4 +1,4 @@
-const User = require('../models/User'); // Import the User model
+import User from '../models/User.js'; // Import the User model
 
 /**
  * Store or update a Spotify user in the database.
@@ -7,7 +7,7 @@ const User = require('../models/User'); // Import the User model
  * @param {String} refresh_token - Spotify refresh token.
  * @returns {Object} - The stored or updated user document.
  */
-async function storeOrUpdateUser(spotifyUser, access_token, refresh_token) {
+export async function storeOrUpdateUser(spotifyUser, access_token, refresh_token) {
   try {
    
     // Log incoming data for debugging
@@ -40,5 +40,3 @@ async function storeOrUpdateUser(spotifyUser, access_token, refresh_token) {
     throw error;
   }
 }
-
-module.exports = { storeOrUpdateUser };

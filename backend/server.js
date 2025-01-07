@@ -1,6 +1,7 @@
-const http = require('http');
-const app = require('./app');
-require('./cronJobs'); // Import the cron jobs
+import http from 'http';
+import app from './app.js'; // Ensure the file extension is included
+import './cronJobs.js'; // Import the cron jobs
+
 
 
 const normalizePort = val => {

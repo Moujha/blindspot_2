@@ -1,10 +1,10 @@
-const axios = require('axios');
-const querystring = require('querystring');
-const { storeOrUpdateUser } = require('../services/userService'); // Import the modular DB function
+import axios from 'axios';
+import querystring from 'querystring';
+import { storeOrUpdateUser } from '../services/userService.js'; // Import the modular DB function
 
 
 // Redirect the user to Spotify's authorization page
-exports.redirectToSpotify = (req, res) => {
+export const redirectToSpotify = (req, res) => {
     const scopes = [
         'user-read-recently-played',
         'user-top-read',
@@ -22,7 +22,7 @@ exports.redirectToSpotify = (req, res) => {
 };
 
 // Handle Spotify callback and exchange authorization code for access token
-exports.handleSpotifyCallback = async (req, res) => {
+export const handleSpotifyCallback = async (req, res) => {
     console.log('Spotify Callback Hit!'); // Log to confirm the route is hit
     console.log('Request Body:', req.body); // Log the request body to debug
     console.log('Request Query:', req.query); // Log the query parameters to debug
@@ -92,7 +92,7 @@ exports.handleSpotifyCallback = async (req, res) => {
 };
 
 // Refresh the access token
-exports.refreshAccessToken = async (req, res) => {
+export const refreshAccessToken = async (req, res) => {
     const { refresh_token } = req.body;
 
     if (!refresh_token) {

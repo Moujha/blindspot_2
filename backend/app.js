@@ -1,11 +1,18 @@
-const express = require('express');
-const path = require('path');
-const connectDB = require('./db'); // Import MongoDB connection function
-const spotifyRoutes = require('./routes/spotifyRoutes'); // Import Spotify routes
-const userRoutes = require('./routes/userRoutes');
-const artistCardRoutes = require('./routes/artistCardRoutes.js'); // Import artist cards routes
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url'; // Required for __dirname in ES Modules
+import dotenv from 'dotenv'; // Load .env variables
+import connectDB from './db.js'; // Import MongoDB connection function
+import spotifyRoutes from './routes/spotifyRoutes.js'; // Import Spotify routes
+import userRoutes from './routes/userRoutes.js'; // Import User routes
+import artistCardRoutes from './routes/artistCardRoutes.js'; // Import Artist Cards routes
 
-require('dotenv').config(); // Load .env variables
+// Initialize dotenv
+dotenv.config();
+
+// Calculate __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -69,4 +76,4 @@ app._router.stack.forEach((middleware) => {
 });
 
 // Export the app
-module.exports = app;
+export default app;

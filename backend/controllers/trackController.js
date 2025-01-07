@@ -1,12 +1,12 @@
-const axios = require('axios');
-const Track = require('../models/Track'); // Import Track model
-const ArtistCard = require('../models/ArtistCard');
+import axios from 'axios';
+import Track from '../models/Track.js'; // Import Track model
+import ArtistCard from '../models/ArtistCard.js';
 
-const { handleArtistDiscovery } = require('../services/artistCardService.js');
-const { fetchSingleArtistDetails } = require('../public/src/scripts/api/spotify-api.js');
+import { handleArtistDiscovery } from '../services/artistCardService.js';
+import { fetchSingleArtistDetails } from '../public/src/scripts/api/spotify-api.js';
 
 // Saves tracks to backend
-exports.saveTracks = async (req, res) => {
+export const saveTracks = async (req, res) => {
     const { userId, tracks } = req.body;
 
   if (!userId || !tracks) {
@@ -64,7 +64,7 @@ exports.saveTracks = async (req, res) => {
 };
 
 // Gets tracks from backend
-exports.getUserTracks = async (req, res) => {
+export const getUserTracks = async (req, res) => {
     const { userId } = req.params; // Extract userId from URL
     
     try {

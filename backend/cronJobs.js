@@ -1,7 +1,7 @@
-const cron = require('node-cron');
-const axios = require('axios');
-const User = require('./models/User'); // Import User model
-const Track = require('./models/Track'); // Import Track model
+import cron from 'node-cron';
+import axios from 'axios';
+import User from './models/User.js'; // Import User model
+import Track from './models/Track.js'; // Import Track model
 
 const refreshSpotifyToken = async (refreshToken) => {
     try {

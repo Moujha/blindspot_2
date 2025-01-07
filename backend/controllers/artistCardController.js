@@ -1,11 +1,11 @@
-const { handleArtistDiscovery } = require('../services/artistCardService.js');
+import { handleArtistDiscovery } from '../services/artistCardService.js';
 
 /**
  * Controller to handle artist discovery.
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
  */
-exports.discoverArtist = async (req, res) => {
+export const discoverArtist = async (req, res) => {
   const { userId, artistId, artistDetails } = req.body;
 
   try {

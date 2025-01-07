@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const artistCardSchema = new mongoose.Schema(
   {
@@ -41,4 +41,4 @@ const artistCardSchema = new mongoose.Schema(
 // Ensure unique combination of user_id and artist_id
 artistCardSchema.index({ user_id: 1, artist_id: 1 }, { unique: true });
 
-module.exports = mongoose.model('ArtistCard', artistCardSchema);
+export default mongoose.model('ArtistCard', artistCardSchema);

@@ -1,7 +1,7 @@
-const User = require('../models/User'); // Import the User schema
+import User from '../models/User.js'; // Import the User schema
 
 // Save or update a user's pseudo
-const savePseudo = async (req, res) => {
+export const savePseudo = async (req, res) => {
     const { userId, pseudo } = req.body; // Get userId and pseudo from the request body
   
     try {
@@ -29,7 +29,7 @@ const savePseudo = async (req, res) => {
     }
   };
 
-const getUserList = async (req, res) => {
+export const getUserList = async (req, res) => {
   try {
     // Aggregate users with their collection size
     const users = await User.aggregate([
@@ -63,5 +63,3 @@ const getUserList = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch user list' });
   }
 };
-
-module.exports = { savePseudo, getUserList };

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const trackSchema = new mongoose.Schema(
   {
@@ -36,4 +36,4 @@ const trackSchema = new mongoose.Schema(
 // Prevent duplicates: unique combination of user_id, isrc, and played_at
 trackSchema.index({ user_id: 1, isrc: 1, played_at: 1 }, { unique: true });
 
-module.exports = mongoose.model('Track', trackSchema);
+export default mongoose.model('Track', trackSchema);

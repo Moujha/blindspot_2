@@ -1,14 +1,13 @@
-const express = require('express');
-const { 
+import express from 'express';
+import { 
     redirectToSpotify, 
     handleSpotifyCallback, 
     refreshAccessToken 
-} = require('../controllers/spotifyController');
-
-const { 
+} from '../controllers/spotifyController.js'; 
+import { 
     saveTracks ,
     getUserTracks
-} = require('../controllers/trackController'); 
+} from '../controllers/trackController.js'; 
 
 
 const router = express.Router();
@@ -28,4 +27,4 @@ router.post('/save-tracks', saveTracks);
 // Route for retrieving tracks in DB
 router.get('/get-tracks/:userId', getUserTracks);
 
-module.exports = router;
+export default router;

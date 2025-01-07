@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { savePseudo, getUserList } = require('../controllers/userController'); // Import the controller
+import { savePseudo, getUserList } from '../controllers/userController.js'; // Import the controller
 
 // Route to save the pseudo
 router.post('/save', savePseudo);
@@ -8,4 +8,4 @@ router.post('/save', savePseudo);
 // Route to fetch the user list
 router.get('/', getUserList);
 
-module.exports = router;
+export default router;
